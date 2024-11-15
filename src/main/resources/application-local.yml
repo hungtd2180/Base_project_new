@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: base_project_1.1
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/pratice_1'
+    username: admin
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        id:
+          new_generator_mappings: true
+        show:
+          sql: true
+        format_sql: true
+        hb2dll:
+          auto: update
+    generate-ddl: true
