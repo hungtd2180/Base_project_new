@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.base.constants.Constant;
 import org.example.base.models.dto.ApiOutput;
 import org.example.base.models.dto.Event;
-import org.example.base.models.entity.User;
 import org.example.base.models.error.ErrorInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
