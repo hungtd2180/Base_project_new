@@ -2,7 +2,6 @@ package org.example.base.endpoints;
 
 
 import org.example.base.models.entity.User;
-import org.example.base.services.CrudService;
 import org.example.base.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,7 @@ public class UserEndpoint extends CrudEndpoint<User , Long> {
 
     @Autowired
     public UserEndpoint(UserService service) {
-        super(service);
-        this.service = userService = service;
-        this.entityClass = User.class;
+        super(User.class, service);
+        this.userService = service;
     }
 }

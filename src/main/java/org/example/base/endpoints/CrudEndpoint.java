@@ -30,7 +30,8 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
 
     protected String baseUrl;
 
-    public CrudEndpoint(CrudService<T , ID> service) {
+    public CrudEndpoint(Class<T> entityClass, CrudService<T , ID> service) {
+        this.entityClass = entityClass;
         this.service = service;
     }
     @GetMapping(value = "{id}")
@@ -58,7 +59,7 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
     public ApiOutput create(@RequestBody T entity) {
         Event event = new Event();
         event.method = Constant.Method.CREATE;
-        event.payload = ObjectMapperUtil.objectMapper(entity.toString(), entityClass);
+        event.payload = ObjectMapperUtil.toJsonString(entity);
         service.process(event);
         return CommonUtil.packing(event);
     }
@@ -67,7 +68,7 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
     public ApiOutput update(@RequestBody T entity) {
         Event event = new Event();
         event.method = Constant.Method.UPDATE;
-        event.payload = ObjectMapperUtil.objectMapper(entity.toString(), entityClass);
+        event.payload = ObjectMapperUtil.toJsonString(entity);
         service.process(event);
         return CommonUtil.packing(event);
     }
