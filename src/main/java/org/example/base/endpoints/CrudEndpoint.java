@@ -82,4 +82,21 @@ public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> 
         return CommonUtil.packing(event);
     }
 
+    @PutMapping(value = "/active/{id}")
+    public ApiOutput active(@PathVariable ID id) {
+        Event event = new Event();
+        event.method = Constant.Method.ACTIVE;
+        event.payload = id.toString();
+        service.process(event);
+        return CommonUtil.packing(event);
+    }
+
+    @PutMapping(value = "/deactive/{id}")
+    public ApiOutput deactive(@PathVariable ID id) {
+        Event event = new Event();
+        event.method = Constant.Method.DEACTIVE;
+        event.payload = id.toString();
+        service.process(event);
+        return CommonUtil.packing(event);
+    }
 }

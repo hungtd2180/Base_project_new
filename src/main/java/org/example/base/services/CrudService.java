@@ -60,6 +60,12 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
             case Constant.Method.GET_ALL:
                 event = processGetAll(event);
                 break;
+            case Constant.Method.ACTIVE:
+                event = processActive(event);
+                break;
+            case Constant.Method.DEACTIVE:
+                event = processDeactive(event);
+                break;
             default:
                 event.errorCode = Constant.ResultStatus.ERROR;
         }
@@ -100,6 +106,18 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
         List<T> data = getAll();
         event.errorCode = Constant.ResultStatus.SUCCESS;
         event.payload = ObjectMapperUtil.toJsonString(data);
+        return event;
+    }
+
+    public Event processActive(Event event) {
+        active((ID) event.payload);
+        event.errorCode = Constant.ResultStatus.SUCCESS;
+        return event;
+    }
+
+    public Event processDeactive(Event event) {
+        deactive((ID) event.payload);
+        event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
     }
 
@@ -146,6 +164,17 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
         delete(entity);
     }
 
+    public void active(ID id) {
+        T entity = get(id);
+        entity.setActive(Constant.EntityStatus.ACTIVE);
+        repository.save(entity);
+    }
+
+    public void deactive(ID id) {
+        T entity = get(id);
+        entity.setActive(Constant.EntityStatus.DEACTIVE);
+        repository.save(entity);
+    }
     protected void beforeCreate(T entity) {
         entity.setCreated(System.currentTimeMillis());
 //        if (entity.getCreatedBy() == null) {

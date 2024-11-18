@@ -42,10 +42,12 @@ public class Constant {
         public static final String DELETE = "delete";
         public static final String GET_ONE = "get_one";
         public static final String GET_ALL = "get_all";
+        public static final String ACTIVE = "active";
+        public static final String DEACTIVE = "deactive";
     }
 
     public static final class EntityStatus {
-        public static final Integer IN_ACTIVE = 0;
+        public static final Integer DEACTIVE = 0;
         public static final Integer ACTIVE = 1;
         public static final Integer REGISTER = 2;
         public static final Integer DELETED = 3;
