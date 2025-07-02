@@ -74,7 +74,7 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
 
     public Event processCreate(Event event) {
         T entity = (T) event.payload;
-        event.payload = ObjectMapperUtil.toJsonString(create(entity));
+        event.payload = create(entity);
         event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
     }
@@ -84,7 +84,7 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
         if (entity.getId() == null || get((ID) entity.getId()) == null ) {
             return handleErrorMessage(event, ErrorKey.CommonErrorKey.NOT_FOUND_ID);
         }
-        event.payload = ObjectMapperUtil.toJsonString(update((ID) entity.getId(), entity));
+        event.payload = update((ID) entity.getId(), entity);
         event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
     }
@@ -98,14 +98,14 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     public Event processGet(Event event) {
         T data = get((ID) event.payload);
         event.errorCode = Constant.ResultStatus.SUCCESS;
-        event.payload = ObjectMapperUtil.toJsonString(data);
+        event.payload = data;
         return event;
     }
 
     public Event processGetAll(Event event) {
         List<T> data = getAll();
         event.errorCode = Constant.ResultStatus.SUCCESS;
-        event.payload = ObjectMapperUtil.toJsonString(data);
+        event.payload = data;
         return event;
     }
 
