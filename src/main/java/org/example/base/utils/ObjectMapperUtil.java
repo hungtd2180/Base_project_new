@@ -17,11 +17,11 @@ import java.util.List;
 
 public class ObjectMapperUtil {
     private static final Logger logger = LoggerFactory.getLogger(ObjectMapperUtil.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
     private ObjectMapperUtil(){}
 
     public static <T> T objectMapper(String json, Class<?> type){
         try{
-            ObjectMapper mapper = new ObjectMapper();
             Object o =  mapper.readValue(json, type);
             return (T) o;
         } catch (Exception e) {
@@ -33,7 +33,6 @@ public class ObjectMapperUtil {
 
     public static <T> List<T> listMapper (String json, Class<?> type){
         try{
-            ObjectMapper mapper = new ObjectMapper();
             List<Object> o = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, type));
             return (List<T>) o;
         } catch (Exception e){
@@ -44,7 +43,6 @@ public class ObjectMapperUtil {
 
     public static <T> String toJsonString(T obj){
         try {
-            ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

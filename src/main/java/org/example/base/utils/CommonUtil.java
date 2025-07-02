@@ -194,8 +194,10 @@ public class CommonUtil {
             event.errorCode = Constant.ResultStatus.SUCCESS;
         apiOutput.setStatus(event.errorCode);
         if (event.errorCode != Constant.ResultStatus.SUCCESS){
-            ErrorInfo errorInfo = ObjectMapperUtil.objectMapper(event.payload, ErrorInfo.class);
+            ErrorInfo errorInfo = (ErrorInfo) event.payload;
             apiOutput.setMessage(errorInfo.getErrorKey());
+        } else {
+            apiOutput.setData(event.payload);
         }
         return apiOutput;
     }

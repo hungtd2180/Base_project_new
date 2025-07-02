@@ -18,9 +18,17 @@ public class Event implements Serializable {
     public String method;
     public Integer errorCode;
     public String token;
-    public String payload;
+    public Object payload;
 
-    public Event(){
+    public Event(String method, Object payload){
+        this.method = method;
+        this.payload = payload;
+        this.id = UUID.randomUUID().toString();
+        this.errorCode = Constant.ResultStatus.SUCCESS;
+    }
+
+    public Event(String method){
+        this.method = method;
         this.id = UUID.randomUUID().toString();
         this.errorCode = Constant.ResultStatus.SUCCESS;
     }

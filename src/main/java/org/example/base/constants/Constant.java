@@ -36,7 +36,7 @@ public class Constant {
     }
 
     //Bổ sung thêm method khi tạo service
-    public static final class Method{
+    public static final class Methods {
         public static final String CREATE = "create";
         public static final String UPDATE = "update";
         public static final String DELETE = "delete";
@@ -44,6 +44,8 @@ public class Constant {
         public static final String GET_ALL = "get_all";
         public static final String ACTIVE = "active";
         public static final String DEACTIVE = "deactive";
+        public static final String UPDATE_PARTIAL = "update_partial";
+        public static final String SEARCH = "search";
     }
 
     public static final class EntityStatus {

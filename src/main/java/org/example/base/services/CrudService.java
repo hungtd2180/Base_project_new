@@ -45,25 +45,25 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     public Event process(Event event) {
         event.errorCode = Constant.ResultStatus.SUCCESS;
         switch (event.method) {
-            case Constant.Method.CREATE:
+            case Constant.Methods.CREATE:
                 event = processCreate(event);
                 break;
-            case Constant.Method.UPDATE:
+            case Constant.Methods.UPDATE:
                 event = processUpdate(event);
                 break;
-            case Constant.Method.DELETE:
+            case Constant.Methods.DELETE:
                 event = processDelete(event);
                 break;
-            case Constant.Method.GET_ONE:
+            case Constant.Methods.GET_ONE:
                 event = processGet(event);
                 break;
-            case Constant.Method.GET_ALL:
+            case Constant.Methods.GET_ALL:
                 event = processGetAll(event);
                 break;
-            case Constant.Method.ACTIVE:
+            case Constant.Methods.ACTIVE:
                 event = processActive(event);
                 break;
-            case Constant.Method.DEACTIVE:
+            case Constant.Methods.DEACTIVE:
                 event = processDeactive(event);
                 break;
             default:
@@ -73,14 +73,14 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
     }
 
     public Event processCreate(Event event) {
-        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
+        T entity = (T) event.payload;
         event.payload = ObjectMapperUtil.toJsonString(create(entity));
         event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
     }
 
     public Event processUpdate(Event event) {
-        T entity = ObjectMapperUtil.objectMapper(event.payload, typeParameterClass);
+        T entity = (T) event.payload;
         if (entity.getId() == null || get((ID) entity.getId()) == null ) {
             return handleErrorMessage(event, ErrorKey.CommonErrorKey.NOT_FOUND_ID);
         }
@@ -217,7 +217,7 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
         ErrorInfo errorInfo = new ErrorInfo();
         errorInfo.setErrorKey(key);
         event.errorCode = Constant.ResultStatus.ERROR;
-        event.payload = ObjectMapperUtil.toJsonString(errorInfo);
+        event.payload = errorInfo;
         return event;
     }
 }
