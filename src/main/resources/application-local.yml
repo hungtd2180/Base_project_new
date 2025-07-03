@@ -1,7 +1,7 @@
 spring:
   application:
     name: base_project_1.1
-  datasource:
+  datasource: #Change when dev
     url: 'jdbc:mysql://localhost:3306/pratice_1'
     username: admin
     password: root

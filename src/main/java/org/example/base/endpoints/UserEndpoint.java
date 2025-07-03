@@ -1,8 +1,8 @@
 package org.example.base.endpoints;
 
 
-import org.example.base.models.entity.User;
-import org.example.base.services.UserService;
+import org.example.base.models.entity.user.User;
+import org.example.base.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

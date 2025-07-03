@@ -1,8 +1,9 @@
-package org.example.base.services;
+package org.example.base.services.user;
 
 
-import org.example.base.models.entity.User;
-import org.example.base.repositories.UserRepository;
+import org.example.base.models.entity.user.User;
+import org.example.base.repositories.user.UserRepository;
+import org.example.base.services.CrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class UserService extends CrudService <User, Long>{
+public class UserService extends CrudService<User, Long> {
     private UserRepository userRepository;
     @Autowired
     public UserService(UserRepository repository) {

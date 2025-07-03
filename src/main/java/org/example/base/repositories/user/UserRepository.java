@@ -1,7 +1,8 @@
-package org.example.base.repositories;
+package org.example.base.repositories.user;
 
 
-import org.example.base.models.entity.User;
+import org.example.base.models.entity.user.User;
+import org.example.base.repositories.CustomJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**

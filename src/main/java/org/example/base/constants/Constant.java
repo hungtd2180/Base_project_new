@@ -11,16 +11,28 @@ package org.example.base.constants;
 public class Constant {
     private Constant(){}
 
-    public static final class Time{
+    public static final class Header {
+        public static final String AUTH_TOKEN_PREFIX = "Bearer ";
+        public static final String AUTH_HEADER_STRING = "Authorization";
+    }
+
+    public static final class Role {
+        public static final String ROLE_ADMIN = "ROLE_SYSTEM_ADMIN";
+        public static final String ROLE_USER = "ROLE_SYSTEM_USER";
+    }
+    public static final class Time {
         public static final String SECOND = "second";
         public static final String MINUTE = "minute";
         public static final String HOUR = "hour";
         public static final String DATE = "date";
         public static final String MONTH = "month";
         public static final String YEAR = "year";
+        public static final Long ONE_DAY = 86400000L;
+        public static final Long ONE_HOUR = 3600000L;
+        public static final Long ONE_MONTH = 2592000000L;
     }
 
-    public static final class Regex{
+    public static final class Regex {
         public static final String EMAIL = "(?!.*(?:''|\\.\\.))[a-zA-Z0-9_-]{1,}[\\.a-zA-Z0-9_-]{1,}[^.]@[a-z0-9]{1,}[a-z0-9-]{0,}(\\.[a-z0-9]{2,4}){1,3}$";
         public static final String VN_PHONE = "^(\\+?84|0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$";
         /**Có ít nhất 1 kí tự chữ hoa hoặc thường, có ít nhất 1 số, không có khoảng trắng và độ dài từ 8 - 32 kí tự*/
@@ -29,7 +41,7 @@ public class Constant {
         public static final String ATTT_PASSWORD = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
     }
 
-    public static final class ResultStatus{
+    public static final class ResultStatus {
         public static final Integer SUCCESS = 0;
         public static final Integer ERROR = 1;
         public static final Integer TIME_OUT = -1;
