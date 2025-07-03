@@ -28,9 +28,9 @@ import java.util.regex.Pattern;
  * for all issues, contact me: hungtd2180@gmail.com
  */
 
-public class CommonUtil {
-    private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
-    private CommonUtil() {}
+public class CommonUtils {
+    private static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
+    private CommonUtils() {}
 
     /**Kiểm tra trong text có chứa kí tự đặc biệt không*/
     public static Boolean containSpecialCharacter(String text) {
@@ -198,6 +198,7 @@ public class CommonUtil {
             apiOutput.setMessage(errorInfo.getErrorKey());
         } else {
             apiOutput.setData(event.payload);
+            if (event.method.equals(Constant.Methods.DELETE)) apiOutput.setData("SUCCESS");
         }
         return apiOutput;
     }

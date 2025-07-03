@@ -15,10 +15,10 @@ import java.util.List;
  * for all issues, contact me: hungtd2180@gmail.com
  */
 
-public class ObjectMapperUtil {
-    private static final Logger logger = LoggerFactory.getLogger(ObjectMapperUtil.class);
+public class ObjectMapperUtils {
+    private static final Logger logger = LoggerFactory.getLogger(ObjectMapperUtils.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-    private ObjectMapperUtil(){}
+    private ObjectMapperUtils(){}
 
     public static <T> T objectMapper(String json, Class<?> type){
         try{

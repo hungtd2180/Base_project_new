@@ -14,7 +14,8 @@ public class ErrorKey {
         public static final String INVALID_USER = "error.userAndPermission.userInvalid";
     }
 
-    public static final class CommonErrorKey {
-        public static final String NOT_FOUND_ID = "error.common.notFoundId";
+    public static final class CRUDErrorKey {
+        public static final String NOT_FOUND_ID = "error.crud.notFoundId";
+        public static final String SEARCH_FAIL = "error.crud.searchFail;";
     }
 }

@@ -8,5 +8,5 @@ package org.example.base.utils;
  * for all issues, contact me: hungtd2180@gmail.com
  */
 
-public class EncryptUtil {
+public class EncryptUtils {
 }
