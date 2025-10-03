@@ -66,4 +66,9 @@ public class Constant {
         public static final Integer REGISTER = 2;
         public static final Integer DELETED = 3;
     }
+
+    public static final class GrantTypeToken {
+        public static final String PASSWORD = "password";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
 }

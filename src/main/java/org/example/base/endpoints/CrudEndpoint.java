@@ -26,14 +26,9 @@ import java.io.Serializable;
 public abstract class CrudEndpoint<T extends IdEntity, ID extends Serializable> {
     @SuppressWarnings("unused")
     private static Logger logger = LoggerFactory.getLogger(CrudEndpoint.class);
-
-    protected Class<T> entityClass;
     protected CrudService<T , ID> service;
 
-    protected String baseUrl;
-
-    public CrudEndpoint(Class<T> entityClass, CrudService<T , ID> service) {
-        this.entityClass = entityClass;
+    public CrudEndpoint(CrudService<T , ID> service) {
         this.service = service;
     }
     @GetMapping(value = "{id}")

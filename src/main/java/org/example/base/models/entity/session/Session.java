@@ -1,4 +1,4 @@
-package org.example.base.models.entity.token;
+package org.example.base.models.entity.session;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "access_token")
 @NoArgsConstructor@Getter@Setter
-public class AccessToken extends IdEntity {
+public class Session extends IdEntity {
     private Long userId;
     private String token;
     private Long expiredTime;

@@ -10,7 +10,7 @@ import org.example.base.models.dto.IdEntity;
 import org.example.base.models.dto.PageInfo;
 import org.example.base.models.dto.SearchInfo;
 import org.example.base.models.error.ErrorInfo;
-import org.example.base.models.error.ErrorKey;
+import org.example.base.constants.ErrorKey;
 import org.example.base.repositories.CustomJpaRepository;
 import org.example.base.rsql.sql.CustomRsqlVisitor;
 import org.example.base.utils.ObjectUtils;
@@ -21,14 +21,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Created by hungtd

@@ -14,6 +14,10 @@ spring:
         show:
           sql: true
         format_sql: true
-        hb2dll:
+        hbm2dll:
           auto: update
-    generate-ddl: true
+tokenTime:
+  accessToken: 3600 #seconds
+  refreshToken: 2592000 #seconds
+  attempt: 5 #times
+  retry: 300 #seconds

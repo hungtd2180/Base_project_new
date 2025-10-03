@@ -253,4 +253,13 @@ public class CommonUtils {
         }
         return randomString;
     }
+
+    public static ApiOutput apiException(String errorKey) {
+        Event event = new Event();
+        ErrorInfo errorInfo = new ErrorInfo();
+        errorInfo.setErrorKey(errorKey);
+        event.errorCode = Constant.ResultStatus.ERROR;
+        event.payload = errorInfo;
+        return packing(event);
+    }
 }

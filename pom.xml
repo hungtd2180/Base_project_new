@@ -133,6 +133,12 @@
             <artifactId>jhipster</artifactId>
             <version>1.1.13</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.zalando/problem-spring-web -->
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-web</artifactId>
+            <version>0.27.0</version>
+        </dependency>
     </dependencies>
 
     <build>

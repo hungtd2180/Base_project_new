@@ -1,6 +1,6 @@
-package org.example.base.configuration;
+package org.example.base.configurations;
 
-import org.example.base.filter.JwtFilter;
+import org.example.base.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

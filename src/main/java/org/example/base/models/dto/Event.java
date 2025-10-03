@@ -20,6 +20,9 @@ public class Event implements Serializable {
     public String token;
     public Object payload;
 
+    public Event() {
+    }
+
     public Event(String method, Object payload){
         this.method = method;
         this.payload = payload;

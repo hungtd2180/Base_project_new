@@ -1,6 +1,7 @@
-package org.example.base.endpoints;
+package org.example.base.endpoints.user;
 
 
+import org.example.base.endpoints.CrudEndpoint;
 import org.example.base.models.entity.user.User;
 import org.example.base.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserEndpoint extends CrudEndpoint<User, Long> {
     private UserService userService;
 
     @Autowired
     public UserEndpoint(UserService service) {
-        super(User.class, service);
+        super(service);
         this.userService = service;
     }
 }

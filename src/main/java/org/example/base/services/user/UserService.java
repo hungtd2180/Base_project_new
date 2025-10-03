@@ -22,5 +22,9 @@ public class UserService extends CrudService<User, Long> {
         super(User.class);
         this.repository = userRepository = repository;
     }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findFirstByUsername(username);
+    }
 }
 
