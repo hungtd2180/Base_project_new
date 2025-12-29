@@ -215,7 +215,7 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
 
     public void deactive(ID id) {
         T entity = get(id);
-        entity.setActive(Constant.EntityStatus.DEACTIVE);
+        entity.setActive(Constant.EntityStatus.INACTIVE);
         repository.save(entity);
     }
     protected void beforeCreate(T entity) {

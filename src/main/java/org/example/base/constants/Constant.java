@@ -61,14 +61,22 @@ public class Constant {
     }
 
     public static final class EntityStatus {
-        public static final Integer DEACTIVE = 0;
-        public static final Integer ACTIVE = 1;
-        public static final Integer REGISTER = 2;
-        public static final Integer DELETED = 3;
+        public static final int INACTIVE = 0;
+        public static final int ACTIVE = 1;
+        public static final int REGISTER = 2;
+        public static final int DELETED = 3;
     }
 
     public static final class GrantTypeToken {
         public static final String PASSWORD = "password";
         public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static final class UserAttempt {
+        public static final Integer SEND_OTP = 1;
+        public static final Integer ENTER_OTP = 2;
+        public static final Integer LOGIN = 3;
+        public static final Integer REGISTER = 4;
+        public static final Integer FORGOT_PASSWORD = 5;
     }
 }

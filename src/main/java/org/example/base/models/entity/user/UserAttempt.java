@@ -1,9 +1,7 @@
 package org.example.base.models.entity.user;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.base.models.dto.IdEntity;
 
@@ -19,6 +17,7 @@ public class UserAttempt extends IdEntity {
     private String username;
     private Integer attempts;
     private Long time;
+    private Integer action; // 0: sendOTP, 1: enterOTP, 2: login, 3: register, 4: forgotPassword
 
     public UserAttempt() {}
 

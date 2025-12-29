@@ -29,37 +29,37 @@ public class UserAttemptService extends CrudService<UserAttempt, Long> {
         this.repository = this.userAttemptRepository = repository;
     }
 
-    public Event checkUserAttemptGetAccessToken(String username) {
-        UserAttempt userAttempt = userAttemptRepository.findFirstByUsername(username);
+    public Event checkUserAttempt(String username, Integer action) {
+        UserAttempt userAttempt = userAttemptRepository.findFirstByUsernameAndAction(username, action);
         long currentTime = System.currentTimeMillis();
         Event result = new Event();
         //Lần đầu
         if (ObjectUtils.isEmpty(userAttempt)) {
             userAttempt = new UserAttempt(username, 1);
-            result.payload = this.create(userAttempt);
+            this.create(userAttempt);
             result.errorCode = Constant.ResultStatus.SUCCESS;
             return result;
         }
         if (!ObjectUtils.isEmpty(userAttempt.getTime())) {
-            // Chưa đến giới hạn
-            if (userAttempt.getAttempts() <= attempts) {
-                userAttempt.setAttempts(userAttempt.getAttempts() + 1);
-                userAttempt.setTime(currentTime);
-                result.payload = this.update(userAttempt.getId(), userAttempt);
-                result.errorCode = Constant.ResultStatus.SUCCESS;
+            //nếu quá giới hạn thì block 5p
+            if (userAttempt.getAttempts() > attempts && (currentTime - userAttempt.getUpdated() < retryTime)) {
+                result.errorCode = Constant.ResultStatus.ERROR;
                 return result;
             }
             // nếu thời gian lâu thì reset
             if (currentTime - userAttempt.getUpdated() > retryTime) {
                 userAttempt.setAttempts(1);
                 userAttempt.setTime(currentTime);
-                result.payload = this.update(userAttempt.getId(), userAttempt);
+                this.update(userAttempt.getId(), userAttempt);
                 result.errorCode = Constant.ResultStatus.SUCCESS;
                 return result;
             }
-            //nếu quá giới hạn thì block 5p
-            if (userAttempt.getAttempts() > attempts && (currentTime - userAttempt.getUpdated() < retryTime)) {
-                result.errorCode = Constant.ResultStatus.ERROR;
+            // Chưa đến giới hạn
+            if (userAttempt.getAttempts() <= attempts) {
+                userAttempt.setAttempts(userAttempt.getAttempts() + 1);
+                userAttempt.setTime(currentTime);
+                this.update(userAttempt.getId(), userAttempt);
+                result.errorCode = Constant.ResultStatus.SUCCESS;
                 return result;
             }
         }

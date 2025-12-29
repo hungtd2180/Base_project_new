@@ -1,4 +1,4 @@
-package org.example.base.models.entity.session;
+package org.example.base.models.entity.token;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -15,12 +15,18 @@ import java.util.Set;
 @Entity
 @Table(name = "access_token")
 @NoArgsConstructor@Getter@Setter
-public class Session extends IdEntity {
+public class AccessToken extends IdEntity {
     private Long userId;
     private String token;
     private Long expiredTime;
     private String username;
+    private String ipAddress;
     @Convert(converter = SetStringConverter.class)
     private Set<String> authorities = new HashSet<>();
-    private String refreshTokenId;
+    private Long refreshTokenId;
+
+    public boolean isExpired(){
+        if(expiredTime == null) return false;
+        return System.currentTimeMillis() > expiredTime;
+    }
 }

@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserAttemptRepository extends CustomJpaRepository<UserAttempt, Long> {
-    UserAttempt findFirstByUsername(String username);
+    UserAttempt findFirstByUsernameAndAction(String username, Integer action);
 }

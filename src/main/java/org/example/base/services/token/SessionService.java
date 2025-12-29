@@ -1,13 +1,13 @@
-package org.example.base.services.session;
+package org.example.base.services.token;
 
 import org.example.base.constants.Constant;
 import org.example.base.constants.ErrorKey;
 import org.example.base.models.dto.TokenRequest;
 import org.example.base.models.dto.TokenResponse;
 import org.example.base.models.dto.Event;
-import org.example.base.models.entity.session.Session;
+import org.example.base.models.entity.token.AccessToken;
 import org.example.base.models.entity.user.User;
-import org.example.base.repositories.session.SessionRepository;
+import org.example.base.repositories.token.AccessTokenRepository;
 import org.example.base.services.CrudService;
 import org.example.base.services.user.UserAttemptService;
 import org.example.base.services.user.UserService;
@@ -23,22 +23,33 @@ import org.springframework.stereotype.Service;
  * For all issues, contact me: hungtd2180@gmail.com
  */
 @Service
-public class SessionService extends CrudService<Session, Long> {
-    private SessionRepository sessionRepository;
+public class SessionService extends CrudService<AccessToken, Long> {
+    private AccessTokenRepository accessTokenRepository;
     @Value("${tokenTime.accessToken}")
     private Long accessTokenExpired;
     @Value("${tokenTime.refreshToken}")
     private Long refreshTokenExpired;
 
-    @Autowired
     private UserAttemptService userAttemptService;
-    @Autowired
     private UserService userService;
+    private TokenService tokenService;
+    @Autowired
+    public void setUserAttemptService(UserAttemptService userAttemptService) {
+        this.userAttemptService = userAttemptService;
+    }
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+    @Autowired
+    public void setTokenService(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @Autowired
-    public SessionService(SessionRepository repository) {
-        super(Session.class);
-        this.repository = sessionRepository = repository;
+    public SessionService(AccessTokenRepository repository) {
+        super(AccessToken.class);
+        this.repository = accessTokenRepository = repository;
     }
 
     private Event processGetToken(Event event) {
@@ -49,7 +60,7 @@ public class SessionService extends CrudService<Session, Long> {
             if (ObjectUtils.isEmpty(tokenRequest.getUsername())) {
                 return handleErrorMessage(event, ErrorKey.AuthErrorKey.ACCOUNT_INVALID);
             }
-            Event checkAttempt = userAttemptService.checkUserAttemptGetAccessToken(tokenRequest.getUsername());
+            Event checkAttempt = userAttemptService.checkUserAttempt(tokenRequest.getUsername(), Constant.UserAttempt.LOGIN);
             if (checkAttempt.errorCode.equals(Constant.ResultStatus.ERROR)) {
                 return handleErrorMessage(event, ErrorKey.AuthErrorKey.LOGIN_LIMIT);
             }
@@ -61,9 +72,14 @@ public class SessionService extends CrudService<Session, Long> {
             if (ObjectUtils.isEmpty(tokenRequest.getPassword()) || !user.authenticate(tokenRequest.getPassword())) {
                 return handleErrorMessage(event, ErrorKey.AuthErrorKey.ACCOUNT_INVALID);
             }
-            if (ObjectUtils.isEmpty(user.getActive()) || !user.getActive().equals(Constant.EntityStatus.ACTIVE)) {
+            if (ObjectUtils.isEmpty(user.getActive()) || user.getActive().equals(Constant.EntityStatus.INACTIVE)) {
                 return handleErrorMessage(event, ErrorKey.AuthErrorKey.ACCOUNT_INACTIVE);
             }
+            if (user.getActive().equals(Constant.EntityStatus.DELETED)) {
+                user.setActive(Constant.EntityStatus.ACTIVE);
+            }
+            AccessToken accessToken = tokenService.createToken(user, event.getIpAddress());
+
 
 
         }
