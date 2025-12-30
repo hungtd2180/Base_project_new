@@ -46,7 +46,6 @@ public class SessionService extends CrudService<AccessToken, Long> {
         this.tokenService = tokenService;
     }
 
-    @Autowired
     public SessionService(AccessTokenRepository repository) {
         super(AccessToken.class);
         this.repository = accessTokenRepository = repository;

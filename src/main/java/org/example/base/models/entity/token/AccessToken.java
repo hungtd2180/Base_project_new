@@ -20,7 +20,7 @@ public class AccessToken extends IdEntity {
     private String token;
     private Long expiredTime;
     private String username;
-    private String ipAddress;
+    private String source;
     @Convert(converter = SetStringConverter.class)
     private Set<String> authorities = new HashSet<>();
     private Long refreshTokenId;
