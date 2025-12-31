@@ -5,6 +5,7 @@ import org.example.base.repositories.CustomJpaRepository;
 
 public interface AccessTokenRepository extends CustomJpaRepository<AccessToken, Long> {
     AccessToken findFirstByToken(String token);
-
-    AccessToken findFirstByUserIdAndIpAddress(Long userId, String ipAddress);
+    AccessToken findFirstByUserId(Long userId);
+    AccessToken findByTokenAndUserId(String token, Long userId);
+    AccessToken findByUserIdAndRefreshTokenId(Long token, String refreshTokenId);
 }

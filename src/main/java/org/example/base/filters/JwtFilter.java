@@ -8,7 +8,7 @@ import org.example.base.configurations.SpringContext;
 import org.example.base.constants.Constant;
 import org.example.base.models.dto.UserPrincipal;
 import org.example.base.models.entity.token.AccessToken;
-import org.example.base.repositories.token.AccessTokenRepository;
+import org.example.base.services.cache.AccessTokenCacheService;
 import org.example.base.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class JwtFilter extends OncePerRequestFilter {
     private static Logger logger = LoggerFactory.getLogger(JwtFilter.class);
-    private AccessTokenRepository accessTokenRepository;
+    private AccessTokenCacheService accessTokenCacheService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.info("User-Agent: {}", request.getHeader("User-Agent"));
@@ -37,14 +37,15 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!ObjectUtils.isEmpty(authorization) && authorization.startsWith(Constant.Header.AUTH_TOKEN_PREFIX)
                 && !request.getMethod().equalsIgnoreCase("OPTIONS") && !authorization.startsWith(Constant.Header.AUTH_TOKEN_PREFIX + "undefined")) {
             String token = authorization.substring(Constant.Header.AUTH_TOKEN_PREFIX.length());
-            if (ObjectUtils.isEmpty(accessTokenRepository)) {
-                accessTokenRepository = SpringContext.getBean(AccessTokenRepository.class);
+            if (ObjectUtils.isEmpty(accessTokenCacheService)) {
+                accessTokenCacheService = SpringContext.getBean(AccessTokenCacheService.class);
             }
-            AccessToken accessToken = accessTokenRepository.findFirstByToken(token);
+            AccessToken accessToken = accessTokenCacheService.getByToken(token);
             if (!ObjectUtils.isEmpty(accessToken)) {
                 if (!ObjectUtils.isEmpty(accessToken.getExpiredTime()) && accessToken.getExpiredTime() - System.currentTimeMillis() < 0) {
                     logger.info("Invalid JWT expired");
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    accessTokenCacheService.remove(accessToken.getId());
                     return;
                 }
                 if (!accessToken.getActive().equals(Constant.EntityStatus.ACTIVE)) {

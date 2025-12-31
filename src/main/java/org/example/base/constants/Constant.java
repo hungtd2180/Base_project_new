@@ -58,6 +58,7 @@ public class Constant {
         public static final String DEACTIVE = "deactive";
         public static final String UPDATE_PARTIAL = "update_partial";
         public static final String SEARCH = "search";
+        public static final String GET_TOKEN = "get_token";
     }
 
     public static final class EntityStatus {

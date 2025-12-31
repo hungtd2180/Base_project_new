@@ -11,8 +11,8 @@ import org.example.base.models.entity.user.User;
  * For all issues, contact me: hungtd2180@gmail.com
  */
 
-public interface TokenService {
-    AccessToken createToken(User user, String ipAddress);
+public interface ITokenService {
+    AccessToken createToken(User user, TokenRequest tokenRequest);
     AccessToken refreshToken(String refreshToken, TokenRequest tokenRequest);
     AccessToken getToken(TokenRequest tokenRequest);
 }

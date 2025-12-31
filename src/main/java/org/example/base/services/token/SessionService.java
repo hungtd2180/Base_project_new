@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
+
 /**
  * Created by hungtd
  * Date: 14/07/2025
@@ -32,7 +34,7 @@ public class SessionService extends CrudService<AccessToken, Long> {
 
     private UserAttemptService userAttemptService;
     private UserService userService;
-    private TokenService tokenService;
+    private ITokenService tokenService;
     @Autowired
     public void setUserAttemptService(UserAttemptService userAttemptService) {
         this.userAttemptService = userAttemptService;
@@ -42,8 +44,8 @@ public class SessionService extends CrudService<AccessToken, Long> {
         this.userService = userService;
     }
     @Autowired
-    public void setTokenService(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public void setTokenService(ITokenService ITokenService) {
+        this.tokenService = ITokenService;
     }
 
     public SessionService(AccessTokenRepository repository) {
@@ -51,10 +53,19 @@ public class SessionService extends CrudService<AccessToken, Long> {
         this.repository = accessTokenRepository = repository;
     }
 
+    @Override
+    public Event processCustomEvent(Event event) {
+        switch (event.method) {
+            case Constant.Methods.GET_TOKEN:
+                return processGetToken(event);
+            default:
+                return super.processCustomEvent(event);
+        }
+    }
+
     private Event processGetToken(Event event) {
         TokenRequest tokenRequest = (TokenRequest) event.payload;
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setExpiredIn(accessTokenExpired);
         if (Constant.GrantTypeToken.PASSWORD.equals(tokenRequest.getGrantType())) {
             if (ObjectUtils.isEmpty(tokenRequest.getUsername())) {
                 return handleErrorMessage(event, ErrorKey.AuthErrorKey.ACCOUNT_INVALID);
@@ -77,14 +88,32 @@ public class SessionService extends CrudService<AccessToken, Long> {
             if (user.getActive().equals(Constant.EntityStatus.DELETED)) {
                 user.setActive(Constant.EntityStatus.ACTIVE);
             }
-            AccessToken accessToken = tokenService.createToken(user, event.getIpAddress());
-
-
-
+            AccessToken accessToken = tokenService.createToken(user, tokenRequest);
+            tokenResponse.setToken(accessToken.getToken());
+            if (!ObjectUtils.isEmpty(accessToken.getRefreshToken())) {
+                tokenResponse.setRefreshToken(accessToken.getRefreshToken().getToken());
+            }
+            tokenResponse.setExpiredIn(accessToken.getExpiredTime());
+            event.payload = tokenResponse;
+        } else {
+            try {
+                String refreshToken = tokenRequest.getRefreshToken();
+                AccessToken newToken = tokenService.refreshToken(refreshToken, tokenRequest);
+                tokenResponse.setToken(newToken.getToken());
+                tokenResponse.setRefreshToken(newToken.getRefreshToken().getToken());
+                tokenResponse.setExpiredIn(newToken.getExpiredTime());
+                event.payload = tokenResponse;
+            } catch (InvalidParameterException e) {
+                if (e.getMessage().contains("expired")){
+                    return handleErrorMessage(event, ErrorKey.TokenErrorKey.REFRESH_TOKEN_EXPIRED);
+                } else {
+                    return handleErrorMessage(event, ErrorKey.TokenErrorKey.REFRESH_TOKEN_INVALID);
+                }
+            }
         }
+
+        event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
 
     }
-
-
 }

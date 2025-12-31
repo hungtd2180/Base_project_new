@@ -14,7 +14,7 @@ spring:
         show:
           sql: true
         format_sql: true
-        hbm2dll:
+        hbm2ddl:
           auto: update
 tokenTime:
   accessToken: 3600 #seconds

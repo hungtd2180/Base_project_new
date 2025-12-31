@@ -33,6 +33,13 @@ public class AccessTokenCacheService extends MemoryCacheService<AccessToken, Lon
     }
 
     public AccessToken getByToken(String token){
-        return tokenMap.get(token);
+        AccessToken data = tokenMap.get(token);
+        if (data == null) {
+            data = accessTokenRepository.findFirstByToken(token);
+            if (data != null) {
+                tokenMap.put(token, data);
+            }
+        }
+        return data;
     }
 }

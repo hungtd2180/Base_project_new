@@ -3,6 +3,7 @@ package org.example.base.models.entity.token;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +24,9 @@ public class AccessToken extends IdEntity {
     private String source;
     @Convert(converter = SetStringConverter.class)
     private Set<String> authorities = new HashSet<>();
-    private Long refreshTokenId;
+    private String refreshTokenId;
+    @Transient
+    private RefreshToken RefreshToken;
 
     public boolean isExpired(){
         if(expiredTime == null) return false;

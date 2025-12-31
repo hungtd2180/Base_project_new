@@ -71,11 +71,16 @@ public abstract class CrudService<T extends IdEntity, ID extends Serializable> {
                 event = processDeactive(event);
                 break;
             default:
-                event.errorCode = Constant.ResultStatus.ERROR;
+                event = processCustomEvent(event);
+                break;
         }
         return event;
     }
 
+    public Event processCustomEvent(Event event) {
+        event.errorCode = Constant.ResultStatus.ERROR;
+        return event;
+    }
     public Event processCreate(Event event) {
         T entity = (T) event.payload;
         event.payload = create(entity);

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/sessions")
 public class SessionEndpoint extends CrudEndpoint<AccessToken, Long> {
     private SessionService sessionService;
-    @Autowired
+
     public SessionEndpoint(SessionService service) {
         super(service);
         this.sessionService = service;

@@ -30,4 +30,9 @@ public class ErrorKey {
         public static final String USER_EXIST = "error.userAndPermission.userExist";
         public static final String USER_INVALID = "error.userAndPermission.userInvalid";
     }
+
+    public static final class TokenErrorKey {
+        public static final String REFRESH_TOKEN_EXPIRED =  "error.token.refreshTokenExpired";
+        public static final String REFRESH_TOKEN_INVALID = "error.token.refreshTokenInvalid";
+    }
 }

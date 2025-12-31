@@ -11,4 +11,5 @@ import org.example.base.repositories.CustomJpaRepository;
  */
 
 public interface RefreshTokenRepository extends CustomJpaRepository<RefreshToken, Long> {
+    RefreshToken findByToken(String token);
 }

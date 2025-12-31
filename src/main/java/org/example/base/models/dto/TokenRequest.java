@@ -17,4 +17,6 @@ public class TokenRequest {
     private String username;
     private String password;
     private String grantType;
+    private Integer expireIn;
+    private Long userId;
 }
