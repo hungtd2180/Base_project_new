@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.base.configurations.SpringContext;
 import org.example.base.constants.Constant;
 import org.example.base.models.dto.UserPrincipal;
-import org.example.base.models.entity.token.AccessToken;
-import org.example.base.services.cache.AccessTokenCacheService;
+import org.example.base.models.entity.token.Token;
+import org.example.base.services.cache.TokenCacheService;
 import org.example.base.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class JwtFilter extends OncePerRequestFilter {
     private static Logger logger = LoggerFactory.getLogger(JwtFilter.class);
-    private AccessTokenCacheService accessTokenCacheService;
+    private TokenCacheService tokenCacheService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.info("User-Agent: {}", request.getHeader("User-Agent"));
@@ -37,15 +37,15 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!ObjectUtils.isEmpty(authorization) && authorization.startsWith(Constant.Header.AUTH_TOKEN_PREFIX)
                 && !request.getMethod().equalsIgnoreCase("OPTIONS") && !authorization.startsWith(Constant.Header.AUTH_TOKEN_PREFIX + "undefined")) {
             String token = authorization.substring(Constant.Header.AUTH_TOKEN_PREFIX.length());
-            if (ObjectUtils.isEmpty(accessTokenCacheService)) {
-                accessTokenCacheService = SpringContext.getBean(AccessTokenCacheService.class);
+            if (ObjectUtils.isEmpty(tokenCacheService)) {
+                tokenCacheService = SpringContext.getBean(TokenCacheService.class);
             }
-            AccessToken accessToken = accessTokenCacheService.getByToken(token);
+            Token accessToken = tokenCacheService.getByToken(token);
             if (!ObjectUtils.isEmpty(accessToken)) {
                 if (!ObjectUtils.isEmpty(accessToken.getExpiredTime()) && accessToken.getExpiredTime() - System.currentTimeMillis() < 0) {
                     logger.info("Invalid JWT expired");
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                    accessTokenCacheService.remove(accessToken.getId());
+                    tokenCacheService.remove(accessToken.getId());
                     return;
                 }
                 if (!accessToken.getActive().equals(Constant.EntityStatus.ACTIVE)) {
@@ -61,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-    private void initSecurityInfo(AccessToken token, String userAgent){
+    private void initSecurityInfo(Token token, String userAgent){
         Set<GrantedAuthority> authorities = new HashSet<>();
         if (token.getAuthorities() != null) {
             for (String scope : token.getAuthorities()) {

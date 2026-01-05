@@ -1,7 +1,7 @@
 package org.example.base.services.token;
 
 import org.example.base.models.dto.TokenRequest;
-import org.example.base.models.entity.token.AccessToken;
+import org.example.base.models.entity.token.Token;
 import org.example.base.models.entity.token.RefreshToken;
 
 /**
@@ -12,12 +12,12 @@ import org.example.base.models.entity.token.RefreshToken;
  */
 
 public interface ITokenStore {
-    void storeAccessToken(AccessToken token, TokenRequest tokenRequest);
-    AccessToken readAccessToken(String token, Long userId);
-    void removeAccessToken(AccessToken token);
+    void storeToken(Token token, TokenRequest tokenRequest);
+    Token readToken(String token, Long userId);
+    void removeToken(Token token);
     void storeRefreshToken(RefreshToken refreshToken, TokenRequest tokenRequest);
     RefreshToken readRefreshToken(String refreshToken);
     void removeRefreshToken(RefreshToken refreshToken);
-    AccessToken removeAccessTokenUsingRefreshToken(RefreshToken refreshToken);
-    AccessToken getAccessToken(TokenRequest tokenRequest);
+    Token removeAccessTokenUsingRefreshToken(RefreshToken refreshToken);
+    Token getToken(TokenRequest tokenRequest);
 }

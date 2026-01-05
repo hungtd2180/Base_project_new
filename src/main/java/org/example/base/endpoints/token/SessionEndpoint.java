@@ -3,10 +3,9 @@ package org.example.base.endpoints.token;
 import org.example.base.constants.ErrorKey;
 import org.example.base.endpoints.CrudEndpoint;
 import org.example.base.models.dto.ApiOutput;
-import org.example.base.models.entity.token.AccessToken;
+import org.example.base.models.entity.token.Token;
 import org.example.base.services.token.SessionService;
 import org.example.base.utils.CommonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/sessions")
-public class SessionEndpoint extends CrudEndpoint<AccessToken, Long> {
+public class SessionEndpoint extends CrudEndpoint<Token, Long> {
     private SessionService sessionService;
 
     public SessionEndpoint(SessionService service) {
@@ -38,12 +37,12 @@ public class SessionEndpoint extends CrudEndpoint<AccessToken, Long> {
     }
 
     @PostMapping
-    public ApiOutput create(@RequestBody AccessToken entity) {
+    public ApiOutput create(@RequestBody Token entity) {
         return CommonUtils.apiException(ErrorKey.ApiErrorKey.NOT_EXIST);
     }
 
     @PutMapping
-    public ApiOutput update(@RequestBody AccessToken entity) {
+    public ApiOutput update(@RequestBody Token entity) {
         return CommonUtils.apiException(ErrorKey.ApiErrorKey.NOT_EXIST);
     }
 

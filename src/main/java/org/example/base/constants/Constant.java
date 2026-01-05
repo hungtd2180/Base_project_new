@@ -71,6 +71,10 @@ public class Constant {
     public static final class GrantTypeToken {
         public static final String PASSWORD = "password";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String JWT = "jwt";
+        public static final String ACCESS_TOKEN = "access_token";
+        public static final String JWT_USER_ID = "user_id";
+        public static final String JWT_SCOPE = "scope";
     }
 
     public static final class UserAttempt {

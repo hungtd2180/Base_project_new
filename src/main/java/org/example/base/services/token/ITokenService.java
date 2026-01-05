@@ -1,7 +1,7 @@
 package org.example.base.services.token;
 
 import org.example.base.models.dto.TokenRequest;
-import org.example.base.models.entity.token.AccessToken;
+import org.example.base.models.entity.token.Token;
 import org.example.base.models.entity.user.User;
 
 /**
@@ -12,7 +12,7 @@ import org.example.base.models.entity.user.User;
  */
 
 public interface ITokenService {
-    AccessToken createToken(User user, TokenRequest tokenRequest);
-    AccessToken refreshToken(String refreshToken, TokenRequest tokenRequest);
-    AccessToken getToken(TokenRequest tokenRequest);
+    Token createToken(User user, TokenRequest tokenRequest);
+    Token refreshToken(String refreshToken, TokenRequest tokenRequest);
+    Token getToken(TokenRequest tokenRequest);
 }

@@ -16,8 +16,13 @@ spring:
         format_sql: true
         hbm2ddl:
           auto: update
-tokenTime:
-  accessToken: 3600 #seconds
-  refreshToken: 2592000 #seconds
+auth:
+  type: jwt   # jwt | access-token
+  jwt:
+    secret: secretofJWTcreatebyhungtd
+    token-expire: 3600
+  access-token:
+    token-expire: 3600
+    refresh-token-expire: 2592000
   attempt: 5 #times
   retry: 300 #seconds

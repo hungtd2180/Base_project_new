@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "access_token")
+@Table(name = "token")
 @NoArgsConstructor@Getter@Setter
-public class AccessToken extends IdEntity {
+public class Token extends IdEntity {
     private Long userId;
     private String token;
     private Long expiredTime;

@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 public class UserCacheService extends MemoryCacheService<User, Long> {
-    private final Logger logger = LoggerFactory.getLogger(AccessTokenCacheService.class);
+    private final Logger logger = LoggerFactory.getLogger(TokenCacheService.class);
     private UserRepository userRepository;
     private final Map<String, User> userMap = new ConcurrentHashMap<>();
     public UserCacheService(UserRepository repository) {

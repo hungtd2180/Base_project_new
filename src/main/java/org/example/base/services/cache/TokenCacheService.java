@@ -1,7 +1,7 @@
 package org.example.base.services.cache;
 
-import org.example.base.models.entity.token.AccessToken;
-import org.example.base.repositories.token.AccessTokenRepository;
+import org.example.base.models.entity.token.Token;
+import org.example.base.repositories.token.TokenRepository;
 import org.example.base.services.MemoryCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * For all issues, contact me: hungtd2180@gmail.com
  */
 @Service
-public class AccessTokenCacheService extends MemoryCacheService<AccessToken, Long> {
-    private final Logger logger = LoggerFactory.getLogger(AccessTokenCacheService.class);
-    private AccessTokenRepository accessTokenRepository;
-    private final Map<String, AccessToken> tokenMap = new ConcurrentHashMap<>();
-    public AccessTokenCacheService(AccessTokenRepository repository) {
-        this.repository = accessTokenRepository = repository;
+public class TokenCacheService extends MemoryCacheService<Token, Long> {
+    private final Logger logger = LoggerFactory.getLogger(TokenCacheService.class);
+    private TokenRepository tokenRepository;
+    private final Map<String, Token> tokenMap = new ConcurrentHashMap<>();
+    public TokenCacheService(TokenRepository repository) {
+        this.repository = tokenRepository = repository;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class AccessTokenCacheService extends MemoryCacheService<AccessToken, Lon
         super.initData();
     }
 
-    public AccessToken getByToken(String token){
-        AccessToken data = tokenMap.get(token);
+    public Token getByToken(String token){
+        Token data = tokenMap.get(token);
         if (data == null) {
-            data = accessTokenRepository.findFirstByToken(token);
+            data = tokenRepository.findFirstByToken(token);
             if (data != null) {
                 tokenMap.put(token, data);
             }

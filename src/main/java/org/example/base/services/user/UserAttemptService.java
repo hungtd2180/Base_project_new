@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserAttemptService extends CrudService<UserAttempt, Long> {
     private UserAttemptRepository userAttemptRepository;
-    @Value("${tokenTime.attempt}")
+    @Value("${auth.attempt}")
     private Long attempts;
-    @Value("${tokenTime.retry}")
+    @Value("${auth.retry}")
     private Long retryTime;
     @Autowired
     public UserAttemptService(UserAttemptRepository repository){

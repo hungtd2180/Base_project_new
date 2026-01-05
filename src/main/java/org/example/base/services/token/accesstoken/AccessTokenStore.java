@@ -1,13 +1,15 @@
-package org.example.base.services.token;
+package org.example.base.services.token.accesstoken;
 
+import org.example.base.constants.Constant;
 import org.example.base.models.dto.TokenRequest;
-import org.example.base.models.entity.token.AccessToken;
 import org.example.base.models.entity.token.RefreshToken;
-import org.example.base.repositories.token.AccessTokenRepository;
+import org.example.base.models.entity.token.Token;
 import org.example.base.repositories.token.RefreshTokenRepository;
-import org.example.base.services.cache.AccessTokenCacheService;
+import org.example.base.repositories.token.TokenRepository;
+import org.example.base.services.cache.TokenCacheService;
+import org.example.base.services.token.ITokenStore;
 import org.example.base.utils.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,41 +19,34 @@ import org.springframework.stereotype.Service;
  * For all issues, contact me: hungtd2180@gmail.com
  */
 @Service
-public class TokenStore implements ITokenStore {
-    private AccessTokenCacheService accessTokenCacheService;
-    private AccessTokenRepository accessTokenRepository;
+@ConditionalOnProperty(name = "auth.type", havingValue = Constant.GrantTypeToken.ACCESS_TOKEN)
+public class AccessTokenStore implements ITokenStore {
+    private TokenCacheService tokenCacheService;
+    private TokenRepository tokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
 
-    @Autowired
-    public void setAccessTokenCacheService(AccessTokenCacheService accessTokenCacheService) {
-        this.accessTokenCacheService = accessTokenCacheService;
-    }
-    @Autowired
-    public void setAccessTokenRepository(AccessTokenRepository accessTokenRepository) {
-        this.accessTokenRepository = accessTokenRepository;
-    }
-
-    @Autowired
-    public void setRefreshTokenRepository(RefreshTokenRepository refreshTokenRepository) {
+    public AccessTokenStore(TokenCacheService tokenCacheService, TokenRepository tokenRepository, RefreshTokenRepository refreshTokenRepository) {
+        this.tokenCacheService = tokenCacheService;
+        this.tokenRepository = tokenRepository;
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
-    public void storeAccessToken(AccessToken token, TokenRequest tokenRequest) {
+    public void storeToken(Token token, TokenRequest tokenRequest) {
         if (!ObjectUtils.isEmpty(token.getRefreshToken())){
             token.setRefreshTokenId(token.getRefreshToken().getToken());
         }
-        token = accessTokenRepository.save(token);
-        accessTokenCacheService.put(token.getId(), token);
+        token = tokenRepository.save(token);
+        tokenCacheService.put(token.getId(), token);
     }
 
     @Override
-    public AccessToken readAccessToken(String token, Long userId) {
-        AccessToken tokenEntity;
+    public Token readToken(String token, Long userId) {
+        Token tokenEntity;
         if (!ObjectUtils.isEmpty(userId)) {
-            tokenEntity = accessTokenRepository.findByTokenAndUserId(token, userId);
+            tokenEntity = tokenRepository.findByTokenAndUserId(token, userId);
         } else {
-            tokenEntity = accessTokenRepository.findFirstByToken(token);
+            tokenEntity = tokenRepository.findFirstByToken(token);
         }
         if (!ObjectUtils.isEmpty(tokenEntity.getRefreshTokenId())) {
             RefreshToken refreshToken = refreshTokenRepository.findByToken(tokenEntity.getRefreshTokenId());
@@ -63,12 +58,12 @@ public class TokenStore implements ITokenStore {
     }
 
     @Override
-    public void removeAccessToken(AccessToken token) {
-        AccessToken tokenCache = accessTokenCacheService.getByToken(token.getToken());
+    public void removeToken(Token token) {
+        Token tokenCache = tokenCacheService.getByToken(token.getToken());
         if (!ObjectUtils.isEmpty(tokenCache)) {
-            accessTokenCacheService.remove(tokenCache.getId());
+            tokenCacheService.remove(tokenCache.getId());
         }
-        accessTokenRepository.delete(token);
+        tokenRepository.delete(token);
         if (!ObjectUtils.isEmpty(token.getRefreshTokenId())) {
             removeRefreshToken(refreshTokenRepository.findByToken(token.getRefreshTokenId()));
         }
@@ -90,25 +85,25 @@ public class TokenStore implements ITokenStore {
     }
 
     @Override
-    public AccessToken removeAccessTokenUsingRefreshToken(RefreshToken refreshToken) {
-        AccessToken token = accessTokenRepository.findByUserIdAndRefreshTokenId(refreshToken.getUserId(), refreshToken.getToken());
+    public Token removeAccessTokenUsingRefreshToken(RefreshToken refreshToken) {
+        Token token = tokenRepository.findByUserIdAndRefreshTokenId(refreshToken.getUserId(), refreshToken.getToken());
         if (ObjectUtils.isEmpty(token)) {
             return null;
         }
-        AccessToken tokenCache = accessTokenCacheService.getByToken(token.getToken());
+        Token tokenCache = tokenCacheService.getByToken(token.getToken());
         if (!ObjectUtils.isEmpty(tokenCache)) {
-            accessTokenCacheService.remove(tokenCache.getId());
+            tokenCacheService.remove(tokenCache.getId());
         }
-        accessTokenRepository.delete(token);
+        tokenRepository.delete(token);
         return token;
     }
 
     @Override
-    public AccessToken getAccessToken(TokenRequest tokenRequest) {
+    public Token getToken(TokenRequest tokenRequest) {
         if (tokenRequest.getUserId() == null) {
             return null;
         }
-        AccessToken token = accessTokenRepository.findFirstByUserId(tokenRequest.getUserId());
+        Token token = tokenRepository.findFirstByUserId(tokenRequest.getUserId());
         if (!ObjectUtils.isEmpty(token) && ObjectUtils.isEmpty(token.getRefreshTokenId())) {
             RefreshToken refreshToken = refreshTokenRepository.findByToken(token.getRefreshTokenId());
             token.setRefreshToken(refreshToken);

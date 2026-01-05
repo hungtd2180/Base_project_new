@@ -1,6 +1,6 @@
 package org.example.base.configurations;
 
-import org.example.base.services.cache.AccessTokenCacheService;
+import org.example.base.services.cache.TokenCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private static final Logger logger = LoggerFactory.getLogger(InitialDataLoader.class);
-    private AccessTokenCacheService accessTokenCacheService;
+    private TokenCacheService tokenCacheService;
     @Autowired
-    public void setAccessTokenCacheService(AccessTokenCacheService accessTokenCacheService) {
-        this.accessTokenCacheService = accessTokenCacheService;
+    public void setAccessTokenCacheService(TokenCacheService tokenCacheService) {
+        this.tokenCacheService = tokenCacheService;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        accessTokenCacheService.initData();
+        tokenCacheService.initData();
     }
 }

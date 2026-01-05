@@ -5,9 +5,9 @@ import org.example.base.constants.ErrorKey;
 import org.example.base.models.dto.TokenRequest;
 import org.example.base.models.dto.TokenResponse;
 import org.example.base.models.dto.Event;
-import org.example.base.models.entity.token.AccessToken;
+import org.example.base.models.entity.token.Token;
 import org.example.base.models.entity.user.User;
-import org.example.base.repositories.token.AccessTokenRepository;
+import org.example.base.repositories.token.TokenRepository;
 import org.example.base.services.CrudService;
 import org.example.base.services.user.UserAttemptService;
 import org.example.base.services.user.UserService;
@@ -25,16 +25,13 @@ import java.security.InvalidParameterException;
  * For all issues, contact me: hungtd2180@gmail.com
  */
 @Service
-public class SessionService extends CrudService<AccessToken, Long> {
-    private AccessTokenRepository accessTokenRepository;
-    @Value("${tokenTime.accessToken}")
-    private Long accessTokenExpired;
-    @Value("${tokenTime.refreshToken}")
-    private Long refreshTokenExpired;
-
+public class SessionService extends CrudService<Token, Long> {
+    private TokenRepository tokenRepository;
     private UserAttemptService userAttemptService;
     private UserService userService;
     private ITokenService tokenService;
+    @Value("${auth.type}")
+    private String tokenType;
     @Autowired
     public void setUserAttemptService(UserAttemptService userAttemptService) {
         this.userAttemptService = userAttemptService;
@@ -48,9 +45,9 @@ public class SessionService extends CrudService<AccessToken, Long> {
         this.tokenService = ITokenService;
     }
 
-    public SessionService(AccessTokenRepository repository) {
-        super(AccessToken.class);
-        this.repository = accessTokenRepository = repository;
+    public SessionService(TokenRepository repository) {
+        super(Token.class);
+        this.repository = tokenRepository = repository;
     }
 
     @Override
@@ -88,17 +85,17 @@ public class SessionService extends CrudService<AccessToken, Long> {
             if (user.getActive().equals(Constant.EntityStatus.DELETED)) {
                 user.setActive(Constant.EntityStatus.ACTIVE);
             }
-            AccessToken accessToken = tokenService.createToken(user, tokenRequest);
-            tokenResponse.setToken(accessToken.getToken());
-            if (!ObjectUtils.isEmpty(accessToken.getRefreshToken())) {
-                tokenResponse.setRefreshToken(accessToken.getRefreshToken().getToken());
+            Token token = tokenService.createToken(user, tokenRequest);
+            tokenResponse.setToken(token.getToken());
+            if (!ObjectUtils.isEmpty(token.getRefreshToken())) {
+                tokenResponse.setRefreshToken(token.getRefreshToken().getToken());
             }
-            tokenResponse.setExpiredIn(accessToken.getExpiredTime());
+            tokenResponse.setExpiredIn(token.getExpiredTime());
             event.payload = tokenResponse;
         } else {
             try {
                 String refreshToken = tokenRequest.getRefreshToken();
-                AccessToken newToken = tokenService.refreshToken(refreshToken, tokenRequest);
+                Token newToken = tokenService.refreshToken(refreshToken, tokenRequest);
                 tokenResponse.setToken(newToken.getToken());
                 tokenResponse.setRefreshToken(newToken.getRefreshToken().getToken());
                 tokenResponse.setExpiredIn(newToken.getExpiredTime());
