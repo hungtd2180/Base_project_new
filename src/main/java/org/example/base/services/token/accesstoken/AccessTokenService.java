@@ -51,7 +51,6 @@ public class AccessTokenService implements ITokenService {
                 tokenStore.removeToken(existingToken);
                 return createAccessToken(tokenRequest, createRefreshToken(user), user);
             }
-            existingToken.setExpiredTime(System.currentTimeMillis() - existingToken.getExpiredTime());
             return existingToken;
         }
         return createAccessToken(tokenRequest, createRefreshToken(user), user);
@@ -106,13 +105,15 @@ public class AccessTokenService implements ITokenService {
         Token token = new Token();
         token.setToken(refreshToken.getUserId() + "_" + UUID.randomUUID() + "_" + System.currentTimeMillis());
         token.setRefreshToken(refreshToken);
-        token.setExpiredTime(System.currentTimeMillis() + tokenExpired);
+        token.setRefreshTokenId(refreshToken.getToken());
+        token.setExpiredTime(System.currentTimeMillis() + tokenExpired * Constant.Time.ONE_SECOND);
         token.setAuthorities(user.getAuthorities());
         token.setActive(user.getActive());
         token.setUsername(user.getUsername());
         token.setUserId(user.getId());
         token.setCreated(System.currentTimeMillis());
         token.setCreatedBy(refreshToken.getCreatedBy());
+        tokenStore.storeToken(token, tokenRequest);
         return token;
     }
 

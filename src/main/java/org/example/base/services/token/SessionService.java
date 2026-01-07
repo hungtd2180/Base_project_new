@@ -90,15 +90,18 @@ public class SessionService extends CrudService<Token, Long> {
             if (!ObjectUtils.isEmpty(token.getRefreshToken())) {
                 tokenResponse.setRefreshToken(token.getRefreshToken().getToken());
             }
-            tokenResponse.setExpiredIn(token.getExpiredTime());
+            tokenResponse.setExpiredIn(token.getExpiredTime() - System.currentTimeMillis() / 1000L);
             event.payload = tokenResponse;
         } else {
+            if (Constant.GrantTypeToken.JWT.equals(tokenRequest.getGrantType())) {
+                return handleErrorMessage(event, ErrorKey.TokenErrorKey.NOT_SUPPORT);
+            }
             try {
                 String refreshToken = tokenRequest.getRefreshToken();
                 Token newToken = tokenService.refreshToken(refreshToken, tokenRequest);
                 tokenResponse.setToken(newToken.getToken());
                 tokenResponse.setRefreshToken(newToken.getRefreshToken().getToken());
-                tokenResponse.setExpiredIn(newToken.getExpiredTime());
+                tokenResponse.setExpiredIn(newToken.getExpiredTime() - System.currentTimeMillis() / 1000L);
                 event.payload = tokenResponse;
             } catch (InvalidParameterException e) {
                 if (e.getMessage().contains("expired")){
@@ -108,9 +111,7 @@ public class SessionService extends CrudService<Token, Long> {
                 }
             }
         }
-
         event.errorCode = Constant.ResultStatus.SUCCESS;
         return event;
-
     }
 }

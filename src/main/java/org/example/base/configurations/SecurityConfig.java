@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/package.json").permitAll()
                         .requestMatchers("/modules/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
 
                         .requestMatchers("/api/**").authenticated()
                 );

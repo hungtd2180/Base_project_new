@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             Token accessToken = tokenCacheService.getByToken(token);
             if (!ObjectUtils.isEmpty(accessToken)) {
-                if (!ObjectUtils.isEmpty(accessToken.getExpiredTime()) && accessToken.getExpiredTime() - System.currentTimeMillis() < 0) {
+                if (!ObjectUtils.isEmpty(accessToken.getExpiredTime()) && accessToken.isExpired()) {
                     logger.info("Invalid JWT expired");
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     tokenCacheService.remove(accessToken.getId());

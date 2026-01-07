@@ -27,6 +27,8 @@ public class Constant {
         public static final String DATE = "date";
         public static final String MONTH = "month";
         public static final String YEAR = "year";
+        public static final Long ONE_SECOND = 1000L;
+        public static final Long ONE_MINUTE = 60000L;
         public static final Long ONE_DAY = 86400000L;
         public static final Long ONE_HOUR = 3600000L;
         public static final Long ONE_MONTH = 2592000000L;

@@ -104,7 +104,7 @@ public class AccessTokenStore implements ITokenStore {
             return null;
         }
         Token token = tokenRepository.findFirstByUserId(tokenRequest.getUserId());
-        if (!ObjectUtils.isEmpty(token) && ObjectUtils.isEmpty(token.getRefreshTokenId())) {
+        if (!ObjectUtils.isEmpty(token) && !ObjectUtils.isEmpty(token.getRefreshTokenId())) {
             RefreshToken refreshToken = refreshTokenRepository.findByToken(token.getRefreshTokenId());
             token.setRefreshToken(refreshToken);
             token.setRefreshTokenId(refreshToken.getToken());

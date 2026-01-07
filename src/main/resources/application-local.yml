@@ -17,9 +17,9 @@ spring:
         hbm2ddl:
           auto: update
 auth:
-  type: jwt   # jwt | access-token
+  type: access_token   # jwt | access_token
   jwt:
-    secret: secretofJWTcreatebyhungtd
+    secret: secretkeyofJWTcreatedbyhungtd2180
     token-expire: 3600
   access-token:
     token-expire: 3600

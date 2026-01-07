@@ -7,6 +7,7 @@ import org.example.base.models.dto.TokenRequest;
 import org.example.base.services.token.SessionService;
 import org.example.base.utils.CommonUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/auth")
-public class OauthEndpoint {
+public class AuthEndpoint {
     private SessionService sessionService;
-    public OauthEndpoint(SessionService sessionService) {
+    public AuthEndpoint(SessionService sessionService) {
         this.sessionService = sessionService;
     }
     @PostMapping("/token")
-    public ApiOutput getToken(TokenRequest tokenRequest){
+    public ApiOutput getToken(@RequestBody TokenRequest tokenRequest){
         Event event = new Event(Constant.Methods.GET_TOKEN, tokenRequest);
         sessionService.process(event);
         return CommonUtils.packing(event);

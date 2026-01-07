@@ -1,7 +1,7 @@
 package org.example.base.services.token.jwt;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.example.base.constants.Constant;
 import org.example.base.models.dto.TokenRequest;
 import org.example.base.models.entity.token.Token;
@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -44,7 +46,6 @@ public class JwtTokenService implements ITokenService {
                 tokenStore.removeToken(existingToken);
                 return createAccessToken(tokenRequest, user);
             }
-            existingToken.setExpiredTime(System.currentTimeMillis() - existingToken.getExpiredTime());
             return existingToken;
         }
         return createAccessToken(tokenRequest, user);
@@ -62,14 +63,16 @@ public class JwtTokenService implements ITokenService {
 
     Token createAccessToken(TokenRequest tokenRequest, User user) {
         Token token = new Token();
-        Date expire = new Date((new Date()).getTime() + tokenExpired);
+        Date expire = new Date((new Date()).getTime() + tokenExpired * Constant.Time.ONE_SECOND);
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         String jwtToken = Jwts.builder()
                 .setSubject(user.getUsername())
                 .setExpiration(expire)
                 .claim(Constant.GrantTypeToken.JWT_USER_ID, user.getId())
                 .claim(Constant.GrantTypeToken.JWT_SCOPE, user.getAuthorities())
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(key)
                 .compact();
+
         token.setToken(jwtToken);
         token.setUserId(user.getId());
         token.setUsername(user.getUsername());
@@ -78,6 +81,7 @@ public class JwtTokenService implements ITokenService {
         token.setActive(user.getActive());
         token.setCreated(System.currentTimeMillis());
         token.setCreatedBy(user.getUsername());
+        tokenStore.storeToken(token, tokenRequest);
         return token;
     }
 }
