@@ -41,8 +41,8 @@ public class SessionService extends CrudService<Token, Long> {
         this.userService = userService;
     }
     @Autowired
-    public void setTokenService(ITokenService ITokenService) {
-        this.tokenService = ITokenService;
+    public void setTokenService(ITokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     public SessionService(TokenRepository repository) {
@@ -90,7 +90,7 @@ public class SessionService extends CrudService<Token, Long> {
             if (!ObjectUtils.isEmpty(token.getRefreshToken())) {
                 tokenResponse.setRefreshToken(token.getRefreshToken().getToken());
             }
-            tokenResponse.setExpiredIn(token.getExpiredTime() - System.currentTimeMillis() / 1000L);
+            tokenResponse.setExpiredIn((token.getExpiredTime() - System.currentTimeMillis()) / 1000L);
             event.payload = tokenResponse;
         } else {
             if (Constant.GrantTypeToken.JWT.equals(tokenRequest.getGrantType())) {
@@ -101,7 +101,7 @@ public class SessionService extends CrudService<Token, Long> {
                 Token newToken = tokenService.refreshToken(refreshToken, tokenRequest);
                 tokenResponse.setToken(newToken.getToken());
                 tokenResponse.setRefreshToken(newToken.getRefreshToken().getToken());
-                tokenResponse.setExpiredIn(newToken.getExpiredTime() - System.currentTimeMillis() / 1000L);
+                tokenResponse.setExpiredIn((newToken.getExpiredTime() - System.currentTimeMillis()) / 1000L);
                 event.payload = tokenResponse;
             } catch (InvalidParameterException e) {
                 if (e.getMessage().contains("expired")){

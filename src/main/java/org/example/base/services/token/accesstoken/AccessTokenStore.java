@@ -48,7 +48,7 @@ public class AccessTokenStore implements ITokenStore {
         } else {
             tokenEntity = tokenRepository.findFirstByToken(token);
         }
-        if (!ObjectUtils.isEmpty(tokenEntity.getRefreshTokenId())) {
+        if (!ObjectUtils.isEmpty(tokenEntity) && !ObjectUtils.isEmpty(tokenEntity.getRefreshTokenId())) {
             RefreshToken refreshToken = refreshTokenRepository.findByToken(tokenEntity.getRefreshTokenId());
             if (!ObjectUtils.isEmpty(refreshToken)) {
                 tokenEntity.setRefreshToken(refreshToken);

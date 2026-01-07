@@ -15,7 +15,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "token")
-@NoArgsConstructor@Getter@Setter
+@NoArgsConstructor
+@Getter
+@Setter
 public class Token extends IdEntity {
     private Long userId;
     private String token;
@@ -26,10 +28,10 @@ public class Token extends IdEntity {
     private Set<String> authorities = new HashSet<>();
     private String refreshTokenId;
     @Transient
-    private RefreshToken RefreshToken;
+    private RefreshToken refreshToken;
 
-    public boolean isExpired(){
-        if(expiredTime == null) return false;
+    public boolean isExpired() {
+        if (expiredTime == null) return false;
         return System.currentTimeMillis() > expiredTime;
     }
 }

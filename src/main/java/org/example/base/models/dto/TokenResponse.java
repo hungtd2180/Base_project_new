@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
  * Time: 9:00 AM
  * For all issues, contact me: hungtd2180@gmail.com
  */
-@NoArgsConstructor@AllArgsConstructor@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class TokenResponse {
     private String token;
     private String refreshToken;
     private Long expiredIn;
-
-
 }
